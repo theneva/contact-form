@@ -2,6 +2,8 @@
 
 A simple single-page application that demonstrates a contact form and an admin panel to handle messages.
 
+__This is only intended for demonstration purposes, and was written in less than 3 hours.__ Do not expect any support, but feel free to [create an issue](https://github.com/theneva/contact-form/issues) or email me at martin@lehmann.tech if you have any questions or feedback.
+
 ## Start the application
 
 ### Production-like
