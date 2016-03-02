@@ -9,7 +9,7 @@ A simple single-page application that demonstrates a contact form and an admin p
 1. `npm install --production`
 2. `npm run build`
 3. `npm start`
-4. Go to http://localhost:8392 (the API is served from /api)
+4. Go to http://localhost:8392](http://localhost:8392) (the API is served from /api)
 
 ### Development
 
@@ -20,7 +20,7 @@ The server must be running.
 1. `npm install`
 2. `npm start` (you still need the server on port 8392)
 3. (In another terminal) `npm run dev`
-4. Go to http://localhost:3000
+4. Go to [http://localhost:3000](http://localhost:3000)
 
 ## Technology stack
 
