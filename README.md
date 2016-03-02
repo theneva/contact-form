@@ -11,7 +11,7 @@ __This is only intended for demonstration purposes, and was written in less than
 1. `npm install --production`
 2. `npm run build`
 3. `npm start`
-4. Go to [http://localhost:8392](http://localhost:8392) (the API is served from /api)
+4. Go to [http://localhost:8392](http://localhost:8392) (the API is served from [/api](http://localhost:8392/api/messages))
 
 ### Development
 
