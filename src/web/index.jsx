@@ -1,9 +1,20 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore } from 'redux';
+import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 
+import { createDevTools } from 'redux-devtools';
+import LogMonitor from 'redux-devtools-log-monitor';
+import DockMonitor from 'redux-devtools-dock-monitor';
+
 import App from './components/App.jsx';
+
+const DevTools = createDevTools(
+    <DockMonitor toggleVisibilityKey='ctrl-h'
+                 changePositionKey='ctrl-q'>
+      <LogMonitor theme="tomorrow"/>
+    </DockMonitor>
+);
 
 // accepts state (the existing state of the app)
 // and an action (what to do with the state)
@@ -28,10 +39,18 @@ function reducer(
   }
 }
 
-const store = createStore(reducer);
+const enhancer = compose(
+    applyMiddleware(),
+    DevTools.instrument()
+);
+
+const store = createStore(reducer, undefined, enhancer);
 
 render((
   <Provider store={store}>
-    <App api="http://localhost:8392/api"/>
+      <div>
+        <App api="http://localhost:8392/api"/>
+        <DevTools/>
+    </div>
   </Provider>
 ), document.getElementById('container'));
