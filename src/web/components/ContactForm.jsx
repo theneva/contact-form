@@ -1,20 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import TextInput from './TextInput.jsx';
 import EmailInput from './EmailInput.jsx';
 import TextArea from './TextArea.jsx';
 
-export default class ContactForm extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      name: '',
-      email: '',
-      message: '',
-    };
-  }
-
+class ContactForm extends React.Component {
   render() {
     const {
       onSubmit,
@@ -24,7 +15,7 @@ export default class ContactForm extends React.Component {
       name,
       email,
       message,
-    } = this.state;
+    } = this.props.contactInfo;
 
     return (
         <div className="form">
@@ -33,13 +24,13 @@ export default class ContactForm extends React.Component {
             e.preventDefault();
           }}>
             <TextInput label="Your name"
-                       onChange={name => this.setState({name})}
+                       onChange={name => this.props.updateContactInfo(name, email, message)}
                        placeholder="Name"/>
             <EmailInput label="Your email"
-                        onChange={email => this.setState({email})}
+                        onChange={email => this.props.updateContactInfo(name, email, message)}
                         placeholder="someone@example.com"/>
             <TextArea label="Your message"
-                      onChange={message => this.setState({message})}
+                      onChange={message => this.props.updateContactInfo(name, email, message)}
                       placeholder="Your message here"/>
             <button className="btn btn-primary">Send!</button>
           </form>
@@ -47,3 +38,23 @@ export default class ContactForm extends React.Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    contactInfo: state.contactInfo,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    updateContactInfo: (name, email, message) => dispatch({
+      type: 'UPDATE_CONTACT_INFO',
+      data: {name, email, message},
+    }),
+  };
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ContactForm);

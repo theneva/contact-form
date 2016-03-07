@@ -1,73 +1,76 @@
 import React from 'react';
+import { connect } from 'react-redux'
 
 import ContactForm from './ContactForm.jsx';
 import AdminPanel from './AdminPanel.jsx';
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
 
-    this.state = {
-      messages: [],
-    };
+    componentWillMount() {
+        const {
+          api,
+        } = this.props;
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+        // Get all existing messages.
+        fetch(api + '/messages')
+            .then(res => res.json())
+            .then(messages=>messages.forEach(message => this.props.addMessage(message)))
+            .catch(err => console.log(err));
+    }
 
-  componentWillMount() {
-    const {
-      api,
-    } = this.props;
+    handleSubmit(name, email, message) {
+        // Send the message to the Node server.
+        fetch(this.props.api + '/messages', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name,
+                email,
+                message,
+            }),
+        })
+            .then(res => res.json())
+            .then(message => {
+                this.props.addMessage(message);
+            })
+            .catch(err => console.log(err));
+    }
 
-    // Get all existing messages.
-    fetch(api + '/messages')
-      .then(res => res.json())
-      .then(messages => this.setState({messages}))
-      .catch(err => console.log(err));
-  }
-
-  handleSubmit(name, email, message) {
-    const {
-      api,
-    } = this.props;
-
-    const {
-      messages,
-    } = this.state;
-
-    // Send the message to the Node server.
-    fetch(api + '/messages', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        message,
-      }),
-    })
-      .then(res => res.json())
-      .then(message => {
-        messages.push(message);
-        this.setState({messages});
-      })
-      .catch(err => console.log(err));
-  }
-
-  render() {
-    const {
-      messages,
-    } = this.state;
-
-    return (
-        <div className="container">
-          <h1>Contact form demo</h1>
-          <ContactForm onSubmit={this.handleSubmit}/>
-          <hr/>
-          <AdminPanel title="All messages"
-                      messages={messages}/>
-        </div>
-    );
-  }
+    render() {
+        return (
+            <div className="container">
+                <h1>Contact form demo</h1>
+                <ContactForm onSubmit={this.handleSubmit}/>
+                <hr/>
+                <AdminPanel title="All messages"
+                            messages={this.props.messages}/>
+            </div>
+        );
+    }
 }
+
+function mapStateToProps(state) {
+    return {
+        messages: state.messages,
+    };
+};
+
+const mapDispatchToProps = dispatch => ({
+    addMessage: message => dispatch({
+        type: 'ADD_MESSAGE',
+        data: message
+    }),
+});
+
+const ConnectedApp = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(App);
+
+export default ConnectedApp;
